@@ -3,8 +3,6 @@ April 18
 ============
 - started working on terni lapilli
 - made the basic move selection, including invalid move selection
-
-to do:
-If it is your turn to move and you have three pieces on the board and
-one of your pieces is in the center square, your move must either win
-or vacate the center square.
+    - maintained two states for the starting and ending move
+    - prevented player from moving to the same square
+    - prevented player from moving to an occupied square
