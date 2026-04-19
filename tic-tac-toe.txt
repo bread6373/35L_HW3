@@ -4,8 +4,6 @@ April 18
 Tic Tac Toe tutorial
 - created tic-tac-toe board
 - created a Square component consisting of buttons to handle clicking
+- create props in the parent component to share information like who's turn it is
 - added functionality to take turns by placing Xs and Os
 - added check to see if any one player has won the game
-
-- started working on terni lapilli
-- made the basic move selection, including invalid move selection
