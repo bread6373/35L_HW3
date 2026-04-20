@@ -6,3 +6,26 @@ April 18
     - maintained two states for the starting and ending move
     - prevented player from moving to the same square
     - prevented player from moving to an occupied square
+
+============
+April 19
+============
+- allowed player to actually be able to move pieces by updating the board
+  with their old position as null and their new position as whatever game
+  piece they are (X or O)
+
+- restricts player to only moving pieces of their own type, by checking if
+  the player clicks on a square of their own piece type (X or O)
+    - X can only move X pieces, O can only move O pieces
+
+- added checking to only allow moves to empty squares by checking if 
+  a move will move into an occupied square
+
+- added checking to only allow moves to adjacent squares by keeping a 
+  list of valid moves and only allowing moves in this list
+
+- added a message to inform the players of an invalid move by keeping a
+  state that becomes true when an invalid move is played
+
+- added feature to enforce players to vacate the center square on their turn
+  unless they can win on their next move

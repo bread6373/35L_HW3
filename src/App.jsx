@@ -16,14 +16,19 @@ export default function App() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
 
-  const [fullMoveComplete, setFullMove] = useState(false);
   const [start, setStart] = useState(-1);
   const [end, setEnd] = useState(-1);
+  const [isInvalidMove, setInvalid] = useState(false)
 
   function handleClick(i) {
+    // If there is a winner, return immediately to prevent further action
+    if (calculateWinner(squares)) {
+      return;
+    }
+
     const nextSquares = squares.slice();
-     
     let movesTaken = squares.reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
+    let turn = xIsNext ? "X" : "O";
     // console.log(`Moves taken: ${movesTaken}`);
     
     // logic for setting up both players with 3 tiles
@@ -39,44 +44,81 @@ export default function App() {
         console.log('O moved')
         nextSquares[i] = "O";
       }
-      
+
       setSquares(nextSquares);
       setXIsNext(!xIsNext);
     
     // logic for setting up the rest of the game
     } else {
+      // When the player has a to pick a starting move
       if (start === -1 && end === -1) {
         console.log(squares[i])
-        if (squares[i] !== null) {
+        
+        // player moving a different piece from their own
+        if (squares[i] !== turn) {
           setStart(-1);
           setEnd(-1);
+          setInvalid(true);
           return;
         }
           
         setStart(i);
+        setInvalid(false);
+      
+      // When the player has a to pick an ending move
       } else if (start !== -1 && end === -1) {
         console.log(squares[i])
+
+        // player moves to an empty square
         if (squares[i] !== null || Number(i) === Number(start)) {
           setStart(-1);
           setEnd(-1);
+          setInvalid(true);
           return;
         }
 
-        setEnd(i);
-      } else if (start !== -1 && end !== -1) {
-        console.log(squares[i])
-        if (squares[i] !== null) {
-          setStart(-1);
-          setEnd(-1);
-          return;
+        const simulatedBoard = squares.slice();
+        simulatedBoard[start] = null;
+        simulatedBoard[i] = turn;
+        const simulatedWinner = calculateWinner(simulatedBoard);
+        console.log(`simluated winner: ${simulatedWinner}`)
+        
+        // validating that a move is to an adjacent square and that the player
+        // vacates the center square unless they can win on the next turn,
+        if (isAdjacentMove(start, i)) {
+          if (squares[4] === turn && simulatedBoard[4] == turn && simulatedWinner !== turn) {
+            setInvalid(true);
+          } else {
+            nextSquares[start] = null;
+            nextSquares[i] = xIsNext ? "X" : "O";
+            console.log(`${nextSquares[start]} to ${nextSquares[end]}`)
+            setSquares(nextSquares);
+            setXIsNext(!xIsNext);
+          }
+        } else {
+          setInvalid(true);
         }
-
-        setStart(i);
+        
+        setStart(-1);
         setEnd(-1);
+        return;
+
       }
+      // else if (start !== -1 && end !== -1) {
+      //   console.log(squares[i])
+      //   if (squares[i] !== turn) {
+      //     setStart(-1);
+      //     setEnd(-1);
+      //     return;
+      //   }
+
+      //   setStart(i);
+      //   setEnd(-1);
+      // }
     }
   }
 
+  // Display winning messages
   const winner = calculateWinner(squares);
   let status;
 
@@ -104,9 +146,14 @@ export default function App() {
         <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
+
+      { /* Display information about the current turn's start and end position */}
       <div>
         Move start: {start !== -1 ? start : "Not chosen"} <br/>
         Move end: {end !== -1 ? end : "Not chosen"} <br/>
+      </div>
+      <div>
+        {isInvalidMove && "Invalid move"}
       </div>
     </>
   );
@@ -130,6 +177,22 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function isAdjacentMove(start, end) {
+  const validMoves = {
+    0: [1, 3, 4],
+    1: [0, 2, 3, 4, 5],
+    2: [1, 4, 5],
+    3: [0, 1, 4, 6, 7],
+    4: [0, 1, 2, 3, 5, 6, 7, 8],
+    5: [1, 2, 4, 7, 8],
+    6: [3, 4, 7],
+    7: [3, 4, 5, 6, 8],
+    8: [4, 5, 7]
+  };
+
+  return validMoves[start].includes(end);
 }
 
 // <div className="container py-4">
