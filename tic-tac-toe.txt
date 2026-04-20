@@ -2,8 +2,15 @@
 April 18
 ============
 Tic Tac Toe tutorial
-- created tic-tac-toe board
-- created a Square component consisting of buttons to handle clicking
-- create props in the parent component to share information like who's turn it is
-- added functionality to take turns by placing Xs and Os
-- added check to see if any one player has won the game
+- created tic-tac-toe board by creating a 3x3 array of Buttons to simulate squares
+- created a Square component that takes in a a value variable and a function to handle clicking
+- created a 9 element array to store the values of each square, passed down by props
+- created a handleClick function to handle the logic when a button is clicked
+    - the function is passed as a prop
+    - the function is written as a callback with an arrow function to
+- added functionality to take turns by placing Xs and Os, with a boolean variable to keep track
+  of whose turn it is
+- added a function to see if any one player has won the game by seeing if any of the three rows, columns
+  or two diagonals have 3 of one player's piece in a row
+    - when someone wins, the handleClick function immediately returns to prevent further action from
+      occurring
