@@ -29,3 +29,9 @@ April 19
 
 - added feature to enforce players to vacate the center square on their turn
   unless they can win on their next move
+
+- added custom messages to specify which type of illegal move was played
+  0: no error
+  1: didnt select own piece
+  2: moved to occupied or non-neighboring square
+  3: violated vacancy rule

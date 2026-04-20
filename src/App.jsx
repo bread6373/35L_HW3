@@ -18,7 +18,8 @@ export default function App() {
 
   const [start, setStart] = useState(-1);
   const [end, setEnd] = useState(-1);
-  const [isInvalidMove, setInvalid] = useState(false)
+  const [isInvalidMove, setInvalid] = useState(false);
+  const [moveErrorCode, setMoveErrorCode] = useState(0);
 
   function handleClick(i) {
     // If there is a winner, return immediately to prevent further action
@@ -59,21 +60,24 @@ export default function App() {
           setStart(-1);
           setEnd(-1);
           setInvalid(true);
+          setMoveErrorCode(1);
           return;
         }
           
         setStart(i);
         setInvalid(false);
+        setMoveErrorCode(0);
       
       // When the player has a to pick an ending move
       } else if (start !== -1 && end === -1) {
         console.log(squares[i])
 
-        // player moves to an empty square
+        // player moves to an occupied square
         if (squares[i] !== null || Number(i) === Number(start)) {
           setStart(-1);
           setEnd(-1);
           setInvalid(true);
+          setMoveErrorCode(2);
           return;
         }
 
@@ -88,6 +92,7 @@ export default function App() {
         if (isAdjacentMove(start, i)) {
           if (squares[4] === turn && simulatedBoard[4] == turn && simulatedWinner !== turn) {
             setInvalid(true);
+            setMoveErrorCode(3);
           } else {
             nextSquares[start] = null;
             nextSquares[i] = xIsNext ? "X" : "O";
@@ -97,24 +102,13 @@ export default function App() {
           }
         } else {
           setInvalid(true);
+          setMoveErrorCode(2);
         }
         
         setStart(-1);
         setEnd(-1);
         return;
-
       }
-      // else if (start !== -1 && end !== -1) {
-      //   console.log(squares[i])
-      //   if (squares[i] !== turn) {
-      //     setStart(-1);
-      //     setEnd(-1);
-      //     return;
-      //   }
-
-      //   setStart(i);
-      //   setEnd(-1);
-      // }
     }
   }
 
@@ -126,6 +120,25 @@ export default function App() {
     status = `Winner: ${winner}`;
   } else {
     status = `Next player: ${xIsNext ? "X" : "O"}`;
+  }
+
+  let errorMessage;
+  switch (moveErrorCode) {
+    case 0:
+      errorMessage = "No error message."
+      break;
+    
+    case 1:
+      errorMessage = "Invalid move: Move your own piece."
+      break;
+    
+    case 2:
+      errorMessage = "Invalid move: Move to an empty, neighboring space."
+      break;
+    
+    case 3:
+      errorMessage = "Invalid move: You must vacate the center square or win."
+      break;
   }
 
   return (
@@ -153,7 +166,8 @@ export default function App() {
         Move end: {end !== -1 ? end : "Not chosen"} <br/>
       </div>
       <div>
-        {isInvalidMove && "Invalid move"}
+        {/* isInvalidMove && "Invalid move" */}
+        {moveErrorCode != 0 && errorMessage}
       </div>
     </>
   );
