@@ -6,7 +6,7 @@ import argparse
 import subprocess
 import unittest
 import urllib.request
-
+import random
 
 class TestChorusLapilli(unittest.TestCase):
     '''Integration testing for Chorus Lapilli
@@ -154,7 +154,50 @@ class TestChorusLapilli(unittest.TestCase):
         self.assertTileIs(tiles[0], self.SYMBOL_BLANK)
         tiles[0].click()
         self.assertTileIs(tiles[0], self.SYMBOL_X)
+    
+    def test_game_end(self):
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        tiles[0].click()
+        tiles[3].click()
+        tiles[1].click()
+        tiles[4].click()
+        tiles[5].click()
+        tiles[8].click()
+        
+        tiles[5].click()
+        tiles[2].click()
 
+        tiles[8].click()
+        tiles[7].click()
+        self.assertTileIs(tiles[7], self.SYMBOL_BLANK)
+    
+    def test_move_non_adjacent(self):
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        tiles[0].click()
+        tiles[3].click()
+        tiles[1].click()
+        tiles[4].click()
+        tiles[5].click()
+        tiles[8].click()
+
+        tiles[5].click()
+        tiles[6].click()
+        self.assertTileIs(tiles[5], self.SYMBOL_X)
+        self.assertTileIs(tiles[6], self.SYMBOL_BLANK)
+
+    def test_vacancy_rule(self):
+        tiles = self.driver.find_elements(By.XPATH, self.BOARD_TILE_XPATH)
+        tiles[0].click()
+        tiles[1].click()
+        tiles[2].click()
+        tiles[5].click()
+        tiles[4].click()
+        tiles[8].click()
+
+        tiles[0].click()
+        tiles[3].click()
+        self.assertTileIs(tiles[0], self.SYMBOL_X)
+        self.assertTileIs(tiles[3], self.SYMBOL_BLANK)
 
 # ================= [DO NOT MAKE ANY CHANGES BELOW THIS LINE] =================
 
