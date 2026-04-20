@@ -124,10 +124,6 @@ export default function App() {
 
   let errorMessage;
   switch (moveErrorCode) {
-    case 0:
-      errorMessage = "No error message."
-      break;
-    
     case 1:
       errorMessage = "Invalid move: Move your own piece."
       break;
@@ -142,8 +138,9 @@ export default function App() {
   }
 
   return (
-    <>
-      <div className="status">{status}</div>
+    <div className="board">
+      <h1 className="title">Chorus Lapilli</h1>
+      <p className="status">{status}</p>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -161,15 +158,14 @@ export default function App() {
       </div>
 
       { /* Display information about the current turn's start and end position */}
-      <div>
+      <p className="move-info">
         Move start: {start !== -1 ? start : "Not chosen"} <br/>
         Move end: {end !== -1 ? end : "Not chosen"} <br/>
-      </div>
-      <div>
-        {/* isInvalidMove && "Invalid move" */}
-        {moveErrorCode != 0 && errorMessage}
-      </div>
-    </>
+      </p>
+      <p className="invalid-move">
+        {moveErrorCode != 0 && errorMessage }
+      </p>
+    </div>
   );
 }
 
